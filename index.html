@@ -1,0 +1,1233 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deutsch für Kinder - ¡Aprende Alemán Jugando!</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts: Fredoka & Quicksand -->
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
+    <!-- Canvas Confetti -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brandYellow: '#FFD166',
+                        brandPink: '#EF476F',
+                        brandBlue: '#118AB2',
+                        brandGreen: '#06D6A0',
+                        brandPurple: '#8338EC',
+                        brandOrange: '#FF9F1C',
+                        bgSoft: '#F8F9FA'
+                    },
+                    fontFamily: {
+                        fredoka: ['Fredoka', 'sans-serif'],
+                        quicksand: ['Quicksand', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Quicksand', sans-serif;
+            background-color: #F3F4F6;
+            background-image: radial-gradient(#E5E7EB 1.5px, transparent 1.5px);
+            background-size: 24px 24px;
+        }
+
+        h1, h2, h3, .font-fun {
+            font-family: 'Fredoka', sans-serif;
+        }
+
+        .card-bounce {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .card-bounce:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 15px 25px -5px rgba(0, 0, 0, 0.15), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+
+        .pulse-btn {
+            animation: pulse-subtle 2s infinite;
+        }
+
+        @keyframes pulse-subtle {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        /* Gender colors for articles */
+        .gender-der { color: #1D4ED8; font-weight: 700; } /* Blue for DER */
+        .gender-die { color: #E11D48; font-weight: 700; } /* Red/Pink for DIE */
+        .gender-das { color: #059669; font-weight: 700; } /* Green for DAS */
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #FFD166;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #FF9F1C;
+        }
+    </style>
+</head>
+<body class="text-gray-800 flex flex-col min-h-screen">
+
+    <!-- Header Navigation -->
+    <header class="bg-white shadow-md sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 py-3 flex flex-wrap items-center justify-between">
+            <!-- Logo -->
+            <div class="flex items-center gap-3 cursor-pointer" onclick="switchMainTab('vocab')">
+                <div class="bg-brandYellow p-3 rounded-2xl shadow-inner text-2xl text-brandPurple">
+                    <i class="fa-solid fa-bear-track"></i> 🇩🇪
+                </div>
+                <div>
+                    <h1 class="text-2xl md:text-3xl font-bold text-brandPurple tracking-wide">Deutsch für Kinder</h1>
+                    <p class="text-xs font-semibold text-gray-500">¡Nivel 4to EGB - Aprende alemán jugando!</p>
+                </div>
+            </div>
+
+            <!-- Stats/Stars Display -->
+            <div class="flex items-center gap-2 bg-yellow-100 border-2 border-yellow-300 px-4 py-2 rounded-full shadow-sm mt-2 sm:mt-0">
+                <i class="fa-solid fa-star text-yellow-500 text-xl animate-bounce"></i>
+                <span id="global-stars" class="font-bold text-yellow-700 text-lg">0</span>
+                <span class="text-xs text-yellow-600 font-semibold hidden sm:inline">Puntos Mágicos</span>
+            </div>
+        </div>
+
+        <!-- Main Navigation Bar -->
+        <nav class="bg-brandPurple text-white px-4 py-2 shadow-inner">
+            <div class="max-w-7xl mx-auto flex flex-wrap justify-center gap-2 font-fun text-sm md:text-base">
+                <button onclick="switchMainTab('vocab')" id="nav-vocab" class="tab-main-btn px-4 py-2 rounded-xl bg-white text-brandPurple font-bold transition shadow-sm hover:bg-yellow-200 flex items-center gap-2">
+                    <i class="fa-solid fa-book-open"></i> Vocabulario
+                </button>
+                <button onclick="switchMainTab('listening')" id="nav-listening" class="tab-main-btn px-4 py-2 rounded-xl hover:bg-brandBlue text-white font-bold transition flex items-center gap-2">
+                    <i class="fa-solid fa-headphones"></i> Desafío Escucha
+                </button>
+                <button onclick="switchMainTab('builder')" id="nav-builder" class="tab-main-btn px-4 py-2 rounded-xl hover:bg-brandBlue text-white font-bold transition flex items-center gap-2">
+                    <i class="fa-solid fa-puzzle-piece"></i> Constructor
+                </button>
+                <button onclick="switchMainTab('quiz')" id="nav-quiz" class="tab-main-btn px-4 py-2 rounded-xl hover:bg-brandBlue text-white font-bold transition flex items-center gap-2">
+                    <i class="fa-solid fa-gamepad"></i> Trivia Mágica
+                </button>
+            </div>
+        </nav>
+    </header>
+
+    <!-- MAIN CONTENT CONTAINER -->
+    <main class="max-w-7xl mx-auto px-4 py-6 flex-grow w-full">
+
+        <!-- SECTION 1: VOCABULARIO & CATEGORÍAS -->
+        <section id="section-vocab" class="main-section block">
+            <!-- Categorías selector -->
+            <div class="mb-6">
+                <h2 class="text-xl md:text-2xl font-bold text-gray-700 mb-3 text-center sm:text-left flex items-center justify-center sm:justify-start gap-2">
+                    <i class="fa-solid fa-shapes text-brandPink"></i> Elige un tema para explorar:
+                </h2>
+                <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3">
+                    <button onclick="loadTopic('body')" id="topic-body" class="topic-btn p-3 rounded-2xl bg-white border-2 border-brandPink text-brandPink font-bold flex flex-col items-center gap-2 shadow-sm hover:bg-pink-50 transition active">
+                        <i class="fa-solid fa-child-reaching text-2xl"></i>
+                        <span class="text-xs md:text-sm">Cuerpo Completo</span>
+                    </button>
+                    <button onclick="loadTopic('colors')" id="topic-colors" class="topic-btn p-3 rounded-2xl bg-white border-2 border-gray-200 text-gray-600 font-bold flex flex-col items-center gap-2 shadow-sm hover:bg-purple-50 transition">
+                        <i class="fa-solid fa-palette text-2xl text-purple-500"></i>
+                        <span class="text-xs md:text-sm">Colores</span>
+                    </button>
+                    <button onclick="loadTopic('numbers')" id="topic-numbers" class="topic-btn p-3 rounded-2xl bg-white border-2 border-gray-200 text-gray-600 font-bold flex flex-col items-center gap-2 shadow-sm hover:bg-blue-50 transition">
+                        <i class="fa-solid fa-arrow-1-9 text-2xl text-blue-500"></i>
+                        <span class="text-xs md:text-sm">Números</span>
+                    </button>
+                    <button onclick="loadTopic('school')" id="topic-school" class="topic-btn p-3 rounded-2xl bg-white border-2 border-gray-200 text-gray-600 font-bold flex flex-col items-center gap-2 shadow-sm hover:bg-yellow-50 transition">
+                        <i class="fa-solid fa-school text-2xl text-yellow-500"></i>
+                        <span class="text-xs md:text-sm">Escuela</span>
+                    </button>
+                    <button onclick="loadTopic('family')" id="topic-family" class="topic-btn p-3 rounded-2xl bg-white border-2 border-gray-200 text-gray-600 font-bold flex flex-col items-center gap-2 shadow-sm hover:bg-green-50 transition">
+                        <i class="fa-solid fa-people-roof text-2xl text-green-500"></i>
+                        <span class="text-xs md:text-sm">Familia</span>
+                    </button>
+                    <button onclick="loadTopic('days')" id="topic-days" class="topic-btn p-3 rounded-2xl bg-white border-2 border-gray-200 text-gray-600 font-bold flex flex-col items-center gap-2 shadow-sm hover:bg-orange-50 transition">
+                        <i class="fa-solid fa-calendar-days text-2xl text-orange-500"></i>
+                        <span class="text-xs md:text-sm">Días de la Semana</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Banner Informativo -->
+            <div class="bg-blue-50 border-l-4 border-brandBlue p-4 rounded-r-xl mb-6 flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <i class="fa-solid fa-lightbulb text-brandBlue text-2xl"></i>
+                    <p class="text-sm md:text-base text-gray-700 font-medium">
+                        <span class="font-bold text-blue-800">Leyenda de Artículos:</span> 
+                        <span class="gender-der">der (Masc.)</span> | 
+                        <span class="gender-die">die (Fem.)</span> | 
+                        <span class="gender-das">das (Neutro)</span>. ¡Haz clic en las tarjetas para escuchar!
+                    </p>
+                </div>
+                <button onclick="speakText('Hallo! Lass uns Deutsch lernen!', 'de-DE')" class="bg-brandBlue text-white px-3 py-1.5 rounded-lg text-xs font-bold hover:bg-blue-600 transition flex items-center gap-1">
+                    <i class="fa-solid fa-volume-high"></i> Audio
+                </button>
+            </div>
+
+            <!-- Contenedor dinámico de Flashcards -->
+            <div id="flashcards-grid" class="space-y-8">
+                <!-- Se llenará dinámicamente -->
+            </div>
+
+            <!-- Módulo Interactivo Especial: Calculadora y Explorador de Números -->
+            <div id="custom-number-explorer" class="hidden mt-8 max-w-xl mx-auto bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-500 rounded-3xl p-6 text-white shadow-2xl border-4 border-yellow-300">
+                <div class="text-center mb-4">
+                    <span class="bg-yellow-300 text-purple-900 font-extrabold text-xs px-3 py-1 rounded-full uppercase tracking-wider inline-flex items-center gap-1 shadow-sm">
+                        <i class="fa-solid fa-calculator text-sm"></i> Calculadora de Números en Alemán
+                    </span>
+                    <h3 class="text-2xl font-bold font-fun mt-2 text-white">¡Aprende y Calcula Números!</h3>
+                    <p class="text-xs text-purple-100">Usa los botones de la calculadora o escribe directamente para saber cómo se dice cualquier número en alemán:</p>
+                </div>
+
+                <!-- Display de la Calculadora -->
+                <div class="bg-slate-900/90 rounded-2xl p-4 mb-4 border-2 border-purple-300/40 shadow-inner">
+                    <div class="flex items-center justify-between text-yellow-300 font-mono text-sm mb-1">
+                        <span class="text-gray-400 font-bold text-xs uppercase">Entrada / Operación:</span>
+                        <span id="calc-expression-display" class="tracking-wide">0</span>
+                    </div>
+                    <div id="custom-german-text" class="text-lg sm:text-2xl font-extrabold text-green-400 font-fun break-words leading-tight min-h-[2rem]">
+                        null
+                    </div>
+                    <div id="custom-spanish-text" class="text-xs text-slate-300 font-medium mt-1 flex justify-between items-center">
+                        <span>Número: <strong id="calc-val-summary" class="text-yellow-300">0</strong></span>
+                        <span class="text-[10px] text-gray-400">Máx. 6 dígitos (0 - 999,999)</span>
+                    </div>
+                </div>
+
+                <!-- Input manual + Botón de audio grande -->
+                <div class="flex flex-col sm:flex-row items-center gap-2 mb-4">
+                    <input type="number" id="custom-number-input" placeholder="Ej: 235" min="0" max="999999" value="0"
+                        oninput="onCalcInputChange(this.value)"
+                        class="px-4 py-2.5 rounded-xl text-gray-900 text-xl font-bold w-full sm:w-1/2 text-center focus:outline-none focus:ring-4 focus:ring-yellow-300 shadow-inner">
+                    <button onclick="convertAndSpeakCustomNumber()" class="w-full sm:w-1/2 px-5 py-2.5 bg-brandYellow hover:bg-yellow-300 text-purple-950 font-extrabold rounded-xl transition shadow-lg flex items-center justify-center gap-2 text-base active:scale-95">
+                        <i class="fa-solid fa-volume-high text-lg"></i> ¡Escuchar Alemán!
+                    </button>
+                </div>
+
+                <!-- Botones Teclado de Calculadora para Niños -->
+                <div class="grid grid-cols-4 gap-2 font-fun text-lg">
+                    <button onclick="calcPressNum('7')" class="p-3 bg-white/20 hover:bg-white/30 active:scale-95 text-white font-bold rounded-xl shadow border border-white/20 transition">7</button>
+                    <button onclick="calcPressNum('8')" class="p-3 bg-white/20 hover:bg-white/30 active:scale-95 text-white font-bold rounded-xl shadow border border-white/20 transition">8</button>
+                    <button onclick="calcPressNum('9')" class="p-3 bg-white/20 hover:bg-white/30 active:scale-95 text-white font-bold rounded-xl shadow border border-white/20 transition">9</button>
+                    <button onclick="calcPressOp('+')" class="p-3 bg-orange-400 hover:bg-orange-500 active:scale-95 text-white font-extrabold rounded-xl shadow transition">+</button>
+
+                    <button onclick="calcPressNum('4')" class="p-3 bg-white/20 hover:bg-white/30 active:scale-95 text-white font-bold rounded-xl shadow border border-white/20 transition">4</button>
+                    <button onclick="calcPressNum('5')" class="p-3 bg-white/20 hover:bg-white/30 active:scale-95 text-white font-bold rounded-xl shadow border border-white/20 transition">5</button>
+                    <button onclick="calcPressNum('6')" class="p-3 bg-white/20 hover:bg-white/30 active:scale-95 text-white font-bold rounded-xl shadow border border-white/20 transition">6</button>
+                    <button onclick="calcPressOp('-')" class="p-3 bg-orange-400 hover:bg-orange-500 active:scale-95 text-white font-extrabold rounded-xl shadow transition">-</button>
+
+                    <button onclick="calcPressNum('1')" class="p-3 bg-white/20 hover:bg-white/30 active:scale-95 text-white font-bold rounded-xl shadow border border-white/20 transition">1</button>
+                    <button onclick="calcPressNum('2')" class="p-3 bg-white/20 hover:bg-white/30 active:scale-95 text-white font-bold rounded-xl shadow border border-white/20 transition">2</button>
+                    <button onclick="calcPressNum('3')" class="p-3 bg-white/20 hover:bg-white/30 active:scale-95 text-white font-bold rounded-xl shadow border border-white/20 transition">3</button>
+                    <button onclick="calcPressOp('*')" class="p-3 bg-orange-400 hover:bg-orange-500 active:scale-95 text-white font-extrabold rounded-xl shadow transition">×</button>
+
+                    <button onclick="calcClear()" class="p-3 bg-red-500 hover:bg-red-600 active:scale-95 text-white font-extrabold rounded-xl shadow transition">C</button>
+                    <button onclick="calcPressNum('0')" class="p-3 bg-white/20 hover:bg-white/30 active:scale-95 text-white font-bold rounded-xl shadow border border-white/20 transition">0</button>
+                    <button onclick="calcEquals()" class="p-3 bg-green-500 hover:bg-green-600 active:scale-95 text-white font-extrabold rounded-xl shadow transition">=</button>
+                    <button onclick="calcPressOp('/')" class="p-3 bg-orange-400 hover:bg-orange-500 active:scale-95 text-white font-extrabold rounded-xl shadow transition">÷</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 2: DESAFÍO DE ESCUCHA (LISTENING) -->
+        <section id="section-listening" class="main-section hidden">
+            <div class="max-w-2xl mx-auto bg-white rounded-3xl p-6 md:p-8 shadow-xl border-4 border-brandBlue text-center">
+                <div class="inline-block bg-blue-100 text-brandBlue px-4 py-1.5 rounded-full font-bold text-sm mb-4">
+                    <i class="fa-solid fa-ear-listen"></i> Entrenamiento Auditivo
+                </div>
+                <h2 class="text-2xl md:text-3xl font-bold text-gray-800 mb-2">¿Qué palabra escuchas?</h2>
+                <p class="text-gray-600 mb-6 text-sm">Presiona el botón de la bocina, escucha con atención y selecciona la opción correcta.</p>
+
+                <!-- Big Sound Button -->
+                <div class="mb-8">
+                    <button id="listen-play-btn" onclick="playListeningAudio()" class="w-28 h-28 bg-brandBlue text-white rounded-full text-4xl shadow-lg hover:bg-blue-600 transition card-bounce pulse-btn flex items-center justify-center mx-auto border-4 border-blue-200">
+                        <i class="fa-solid fa-volume-high"></i>
+                    </button>
+                    <p class="text-xs text-gray-400 mt-2 font-semibold">Toca para volver a escuchar</p>
+                </div>
+
+                <!-- Multiple Choice Options -->
+                <div id="listening-options" class="grid grid-cols-2 gap-4">
+                    <!-- Opciones de respuesta -->
+                </div>
+
+                <!-- Feedback Message -->
+                <div id="listening-feedback" class="mt-6 h-12 flex items-center justify-center text-lg font-bold rounded-xl transition">
+                    <!-- Mensaje dinámico -->
+                </div>
+
+                <button onclick="nextListeningQuestion()" class="mt-4 px-6 py-2.5 bg-brandPurple text-white font-bold rounded-xl shadow hover:bg-purple-700 transition">
+                    Siguiente Palabra <i class="fa-solid fa-arrow-right ml-1"></i>
+                </button>
+            </div>
+        </section>
+
+        <!-- SECTION 3: CONSTRUCTOR DE ORACIONES -->
+        <section id="section-builder" class="main-section hidden">
+            <div class="max-w-3xl mx-auto bg-white rounded-3xl p-6 md:p-8 shadow-xl border-4 border-brandGreen">
+                <div class="text-center mb-6">
+                    <span class="bg-green-100 text-brandGreen px-4 py-1.5 rounded-full font-bold text-sm">
+                        <i class="fa-solid fa-cubes"></i> Creador de Frases
+                    </span>
+                    <h2 class="text-2xl md:text-3xl font-bold text-gray-800 mt-2">¡Construye oraciones en alemán!</h2>
+                    <p class="text-gray-600 text-sm">Toca las palabras de abajo en orden para formar la oración perfecta.</p>
+                </div>
+
+                <!-- Target translation hint -->
+                <div class="bg-green-50 border-2 border-green-200 rounded-2xl p-4 text-center mb-6">
+                    <span class="text-xs text-green-700 uppercase font-bold tracking-wider">Objetivo a formar:</span>
+                    <p id="builder-target-es" class="text-xl font-bold text-brandGreen mt-1">"Esta es mi mamá"</p>
+                </div>
+
+                <!-- Dropzone / Selected Words Area -->
+                <div id="builder-dropzone" class="min-h-[90px] border-3 border-dashed border-gray-300 bg-gray-50 rounded-2xl p-4 flex flex-wrap items-center justify-center gap-3 mb-6 transition">
+                    <span id="builder-placeholder" class="text-gray-400 text-sm font-semibold">Toca las palabras para agregarlas aquí...</span>
+                </div>
+
+                <!-- Available Word Blocks -->
+                <div class="mb-6">
+                    <p class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-3 text-center">Bloques disponibles:</p>
+                    <div id="builder-words-pool" class="flex flex-wrap justify-center gap-3">
+                        <!-- Botones de palabras dinámicos -->
+                    </div>
+                </div>
+
+                <!-- Action Controls -->
+                <div class="flex flex-wrap justify-center gap-3">
+                    <button onclick="speakBuiltSentence()" class="px-5 py-3 bg-brandGreen text-white font-bold rounded-xl shadow-md hover:bg-green-600 transition flex items-center gap-2">
+                        <i class="fa-solid fa-volume-high text-lg"></i> Escuchar Oración
+                    </button>
+                    <button onclick="checkBuiltSentence()" class="px-5 py-3 bg-brandYellow text-gray-800 font-bold rounded-xl shadow-md hover:bg-yellow-400 transition flex items-center gap-2">
+                        <i class="fa-solid fa-circle-check text-lg"></i> Comprobar
+                    </button>
+                    <button onclick="resetBuilder()" class="px-4 py-3 bg-gray-200 text-gray-700 font-bold rounded-xl hover:bg-gray-300 transition">
+                        <i class="fa-solid fa-rotate-right"></i> Borrar
+                    </button>
+                </div>
+
+                <!-- Result feedback -->
+                <div id="builder-feedback" class="mt-4 text-center font-bold text-lg h-8"></div>
+            </div>
+        </section>
+
+        <!-- SECTION 4: TRIVIA / QUIZ -->
+        <section id="section-quiz" class="main-section hidden">
+            <div class="max-w-2xl mx-auto bg-white rounded-3xl p-6 md:p-8 shadow-xl border-4 border-brandOrange">
+                <!-- Header Status -->
+                <div class="flex justify-between items-center mb-6 pb-4 border-b">
+                    <div class="flex items-center gap-2">
+                        <i class="fa-solid fa-trophy text-brandOrange text-2xl"></i>
+                        <span id="quiz-progress-text" class="font-bold text-gray-700">Pregunta 1 de 5</span>
+                    </div>
+                    <div class="bg-orange-100 text-brandOrange font-bold px-3 py-1 rounded-full text-sm">
+                        Puntos: <span id="quiz-score">0</span>
+                    </div>
+                </div>
+
+                <!-- Question Area -->
+                <div class="text-center mb-8">
+                    <h2 id="quiz-question-title" class="text-xl md:text-2xl font-bold text-gray-800 mb-2">
+                        ¿Cómo se dice "El perro" en alemán?
+                    </h2>
+                    <div id="quiz-media" class="text-6xl my-4 text-brandOrange">
+                        <i class="fa-solid fa-question"></i>
+                    </div>
+                </div>
+
+                <!-- Options -->
+                <div id="quiz-options-container" class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+                    <!-- Opciones dinámicas -->
+                </div>
+
+                <!-- Quiz Feedback -->
+                <div id="quiz-feedback" class="h-10 text-center font-bold text-lg mb-4"></div>
+
+                <div class="flex justify-end">
+                    <button id="quiz-next-btn" onclick="nextQuizQuestion()" class="hidden px-6 py-2.5 bg-brandOrange text-white font-bold rounded-xl shadow hover:bg-orange-600 transition">
+                        Siguiente <i class="fa-solid fa-chevron-right ml-1"></i>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="bg-white border-t border-gray-200 py-6 mt-8">
+        <div class="max-w-7xl mx-auto px-4 text-center text-gray-500 text-sm">
+            <p class="font-bold text-brandPurple">🇩🇪 Deutsch für Kinder - ¡Aprender es divertido!</p>
+            <p class="mt-1">Diseñado para niños estudiantes de alemán con audio, interacción visual y juegos.</p>
+        </div>
+    </footer>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        /* ==================== GLOBAL STATE & AUDIO SYSTEM ==================== */
+        let globalStars = 0;
+        let currentCategory = 'body';
+        let currentListeningTarget = null;
+        let selectedBuilderWords = [];
+        let currentBuilderSentence = null;
+        let quizScore = 0;
+        let currentQuizIndex = 0;
+        let quizQuestions = [];
+
+        // Speech Synthesis helper function
+        function speakText(text, lang = 'de-DE') {
+            if (!('speechSynthesis' in window)) {
+                console.warn('Text-to-speech is not supported in this browser.');
+                return;
+            }
+            window.speechSynthesis.cancel(); // Cancel any ongoing speech
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = lang;
+            utterance.rate = 0.85; // Slightly slower speech rate for kids
+            utterance.pitch = 1.1;  // Friendly pitch
+            window.speechSynthesis.speak(utterance);
+        }
+
+        // Global points / stars system
+        function addStars(amount) {
+            globalStars += amount;
+            const starElem = document.getElementById('global-stars');
+            if (starElem) {
+                starElem.textContent = globalStars;
+            }
+        }
+
+        // Navigation tab switcher
+        function switchMainTab(tabId) {
+            document.querySelectorAll('.main-section').forEach(sec => sec.classList.add('hidden'));
+            const activeSection = document.getElementById(`section-${tabId}`);
+            if (activeSection) activeSection.classList.remove('hidden');
+
+            document.querySelectorAll('.tab-main-btn').forEach(btn => {
+                btn.classList.remove('bg-white', 'text-brandPurple');
+                btn.classList.add('hover:bg-brandBlue', 'text-white');
+            });
+
+            const activeBtn = document.getElementById(`nav-${tabId}`);
+            if (activeBtn) {
+                activeBtn.classList.add('bg-white', 'text-brandPurple');
+                activeBtn.classList.remove('hover:bg-brandBlue');
+            }
+
+            // Initialize tabs on view switch
+            if (tabId === 'listening') {
+                initListeningChallenge();
+            } else if (tabId === 'builder') {
+                initBuilder();
+            } else if (tabId === 'quiz') {
+                initQuiz();
+            }
+        }
+
+        /* ==================== BASE DE DATOS DE VOCABULARIO ENRIQUECIDA ==================== */
+        const vocabularyData = {
+            body: {
+                title: 'Partes del cuerpo',
+                icon: 'fa-child-reaching',
+                isGrouped: true,
+                groups: [
+                    {
+                        name: 'Der Kopf (La cabeza y la cara)',
+                        bgColor: 'bg-pink-50',
+                        borderColor: 'border-pink-300',
+                        textColor: 'text-pink-700',
+                        items: [
+                            { article: 'der', word: 'Kopf', plural: '(-¨e)', es: 'la cabeza', icon: 'fa-user-ninja', color: 'bg-red-100 text-red-500' },
+                            { article: 'das', word: 'Haar', plural: '(-e / die Haare)', es: 'el pelo / el cabello', icon: 'fa-scissors', color: 'bg-pink-100 text-pink-500' },
+                            { article: 'das', word: 'Gesicht', plural: '(-er)', es: 'la cara / el rostro', icon: 'fa-face-smile', color: 'bg-pink-100 text-pink-500' },
+                            { article: 'die', word: 'Stirn', plural: '(-en)', es: 'la frente', icon: 'fa-head-side', color: 'bg-pink-100 text-pink-500' },
+                            { article: 'das', word: 'Auge', plural: '(-n)', es: 'el ojo', icon: 'fa-eye', color: 'bg-blue-100 text-blue-500' },
+                            { article: 'das', word: 'Ohr', plural: '(-en)', es: 'la oreja', icon: 'fa-ear-listen', color: 'bg-purple-100 text-purple-500' },
+                            { article: 'die', word: 'Nase', plural: '(-n)', es: 'la nariz', icon: 'fa-face-smile-wink', color: 'bg-pink-100 text-pink-500' },
+                            { article: 'der', word: 'Mund', plural: '(-¨er)', es: 'la boca', icon: 'fa-comment', color: 'bg-orange-100 text-orange-500' },
+                            { article: 'die', word: 'Lippe', plural: '(-n)', es: 'el labio', icon: 'fa-kiss-wink-heart', color: 'bg-red-100 text-red-500' },
+                            { article: 'der', word: 'Zahn', plural: '(-¨e)', es: 'el diente', icon: 'fa-tooth', color: 'bg-blue-100 text-blue-400' },
+                            { article: 'die', word: 'Zunge', plural: '(-n)', es: 'la lengua', icon: 'fa-face-tongue', color: 'bg-pink-100 text-pink-500' },
+                            { article: 'das', word: 'Kinn', plural: '(-e)', es: 'la barbilla / el mentón', icon: 'fa-user', color: 'bg-pink-100 text-pink-500' },
+                            { article: 'der', word: 'Hals', plural: '(-¨e)', es: 'el cuello / la garganta', icon: 'fa-user-tie', color: 'bg-orange-100 text-orange-500' }
+                        ]
+                    },
+                    {
+                        name: 'Der Oberkörper (El tronco y parte superior)',
+                        bgColor: 'bg-blue-50',
+                        borderColor: 'border-blue-300',
+                        textColor: 'text-blue-700',
+                        items: [
+                            { article: 'die', word: 'Schulter', plural: '(-n)', es: 'el hombro', icon: 'fa-person', color: 'bg-blue-100 text-blue-600' },
+                            { article: 'der', word: 'Rücken', plural: '(-)', es: 'la espalda', icon: 'fa-child', color: 'bg-blue-100 text-blue-600' },
+                            { article: 'die', word: 'Brust', plural: '(-¨e)', es: 'el pecho', icon: 'fa-heart-pulse', color: 'bg-blue-100 text-blue-600' },
+                            { article: 'der', word: 'Bauch', plural: '(-¨e)', es: 'el abdomen / la barriga', icon: 'fa-child-reaching', color: 'bg-blue-100 text-blue-600' },
+                            { article: 'die', word: 'Taille', plural: '(-n)', es: 'la cintura', icon: 'fa-vector-square', color: 'bg-blue-100 text-blue-600' },
+                            { article: 'die', word: 'Hüfte', plural: '(-n)', es: 'la cadera', icon: 'fa-arrows-left-right', color: 'bg-blue-100 text-blue-600' }
+                        ]
+                    },
+                    {
+                        name: 'Die Arme und Hände (Los brazos y las manos)',
+                        bgColor: 'bg-yellow-50',
+                        borderColor: 'border-yellow-300',
+                        textColor: 'text-yellow-700',
+                        items: [
+                            { article: 'der', word: 'Arm', plural: '(-e)', es: 'el brazo', icon: 'fa-hand-flex', color: 'bg-yellow-100 text-yellow-600' },
+                            { article: 'der', word: 'Ellbogen', plural: '(-)', es: 'el codo', icon: 'fa-bone', color: 'bg-yellow-100 text-yellow-600' },
+                            { article: 'das', word: 'Handgelenk', plural: '(-e)', es: 'la muñeca', icon: 'fa-hand-back-fist', color: 'bg-yellow-100 text-yellow-600' },
+                            { article: 'die', word: 'Hand', plural: '(-¨e)', es: 'la mano', icon: 'fa-hand', color: 'bg-yellow-100 text-yellow-600' },
+                            { article: 'der', word: 'Finger', plural: '(-)', es: 'el dedo (de la mano)', icon: 'fa-hand-point-up', color: 'bg-yellow-100 text-yellow-600' },
+                            { article: 'der', word: 'Daumen', plural: '(-)', es: 'el pulgar', icon: 'fa-thumbs-up', color: 'bg-yellow-100 text-yellow-600' },
+                            { article: 'der', word: 'Nagel', plural: '(-¨)', es: 'la uña (Fingernagel)', icon: 'fa-hand-sparkles', color: 'bg-yellow-100 text-yellow-600' }
+                        ]
+                    },
+                    {
+                        name: 'Die Beine und Füße (Las piernas y los pies)',
+                        bgColor: 'bg-green-50',
+                        borderColor: 'border-green-300',
+                        textColor: 'text-green-700',
+                        items: [
+                            { article: 'das', word: 'Bein', plural: '(-e)', es: 'la pierna', icon: 'fa-person-walking', color: 'bg-green-100 text-green-600' },
+                            { article: 'der', word: 'Oberschenkel', plural: '(-)', es: 'el muslo', icon: 'fa-person-running', color: 'bg-green-100 text-green-600' },
+                            { article: 'das', word: 'Knie', plural: '(-)', es: 'la rodilla', icon: 'fa-child', color: 'bg-green-100 text-green-600' },
+                            { article: 'der', word: 'Fuß', plural: '(-¨e)', es: 'el pie', icon: 'fa-socks', color: 'bg-green-100 text-green-600' },
+                            { article: 'der', word: 'Knöchel', plural: '(-)', es: 'el tobillo', icon: 'fa-shoe-prints', color: 'bg-green-100 text-green-600' },
+                            { article: 'die', word: 'Zehe', plural: '(-n)', es: 'el dedo del pie (der Zeh)', icon: 'fa-shoe-prints', color: 'bg-green-100 text-green-600' }
+                        ]
+                    },
+                    {
+                        name: 'Innere Organe und Sonstiges (Órganos internos y otros)',
+                        bgColor: 'bg-purple-50',
+                        borderColor: 'border-purple-300',
+                        textColor: 'text-purple-700',
+                        items: [
+                            { article: 'das', word: 'Herz', plural: '(-en)', es: 'el corazón', icon: 'fa-heart', color: 'bg-purple-100 text-purple-600' },
+                            { article: 'die', word: 'Lunge', plural: '(-n)', es: 'el pulmón', icon: 'fa-lungs', color: 'bg-purple-100 text-purple-600' },
+                            { article: 'der', word: 'Magen', plural: '(-¨)', es: 'el estómago', icon: 'fa-pills', color: 'bg-purple-100 text-purple-600' },
+                            { article: 'die', word: 'Haut', plural: '(sin plural)', es: 'la piel', icon: 'fa-hand-dots', color: 'bg-purple-100 text-purple-600' },
+                            { article: 'der', word: 'Knochen', plural: '(-)', es: 'el hueso', icon: 'fa-bone', color: 'bg-purple-100 text-purple-600' },
+                            { article: 'das', word: 'Blut', plural: '(sin plural)', es: 'la sangre', icon: 'fa-droplet', color: 'bg-purple-100 text-purple-600' }
+                        ]
+                    }
+                ]
+            },
+            colors: {
+                title: 'Colores',
+                icon: 'fa-palette',
+                items: [
+                    { de: 'Rot', es: 'Rojo', icon: 'fa-circle', color: 'bg-red-500 text-white' },
+                    { de: 'Blau', es: 'Azul', icon: 'fa-circle', color: 'bg-blue-500 text-white' },
+                    { de: 'Hellblau', es: 'Azul Claro', icon: 'fa-circle', color: 'bg-sky-400 text-white' },
+                    { de: 'Dunkelblau', es: 'Azul Oscuro', icon: 'fa-circle', color: 'bg-blue-900 text-white' },
+                    { de: 'Grün', es: 'Verde', icon: 'fa-circle', color: 'bg-green-500 text-white' },
+                    { de: 'Hellgrün', es: 'Verde Claro', icon: 'fa-circle', color: 'bg-lime-400 text-gray-800' },
+                    { de: 'Gelb', es: 'Amarillo', icon: 'fa-circle', color: 'bg-yellow-400 text-gray-800' },
+                    { de: 'Schwarz', es: 'Negro', icon: 'fa-circle', color: 'bg-gray-900 text-white' },
+                    { de: 'Weiß', es: 'Blanco', icon: 'fa-circle', color: 'bg-gray-100 text-gray-800 border-2 border-gray-300' },
+                    { de: 'Rosa', es: 'Rosado', icon: 'fa-circle', color: 'bg-pink-400 text-white' },
+                    { de: 'Lila', es: 'Lila / Morado', icon: 'fa-circle', color: 'bg-purple-600 text-white' },
+                    { de: 'Violett', es: 'Violeta', icon: 'fa-circle', color: 'bg-indigo-600 text-white' },
+                    { de: 'Orange', es: 'Naranja', icon: 'fa-circle', color: 'bg-orange-500 text-white' },
+                    { de: 'Braun', es: 'Marrón / Café', icon: 'fa-circle', color: 'bg-amber-800 text-white' },
+                    { de: 'Grau', es: 'Gris', icon: 'fa-circle', color: 'bg-gray-500 text-white' },
+                    { de: 'Türkis', es: 'Turquesa', icon: 'fa-circle', color: 'bg-teal-400 text-white' },
+                    { de: 'Gold', es: 'Dorado', icon: 'fa-circle', color: 'bg-yellow-600 text-white' },
+                    { de: 'Silber', es: 'Plateado', icon: 'fa-circle', color: 'bg-slate-300 text-gray-800' }
+                ]
+            },
+            numbers: {
+                title: 'Números (1 al 20)',
+                icon: 'fa-arrow-1-9',
+                items: [
+                    { de: 'Eins', es: 'Uno (1)', numDisplay: '1', color: 'bg-indigo-100 text-indigo-600' },
+                    { de: 'Zwei', es: 'Dos (2)', numDisplay: '2', color: 'bg-indigo-100 text-indigo-600' },
+                    { de: 'Drei', es: 'Tres (3)', numDisplay: '3', color: 'bg-indigo-100 text-indigo-600' },
+                    { de: 'Vier', es: 'Cuatro (4)', numDisplay: '4', color: 'bg-indigo-100 text-indigo-600' },
+                    { de: 'Fünf', es: 'Cinco (5)', numDisplay: '5', color: 'bg-indigo-100 text-indigo-600' },
+                    { de: 'Sechs', es: 'Seis (6)', numDisplay: '6', color: 'bg-indigo-100 text-indigo-600' },
+                    { de: 'Sieben', es: 'Siete (7)', numDisplay: '7', color: 'bg-indigo-100 text-indigo-600' },
+                    { de: 'Acht', es: 'Ocho (8)', numDisplay: '8', color: 'bg-indigo-100 text-indigo-600' },
+                    { de: 'Neun', es: 'Nueve (9)', numDisplay: '9', color: 'bg-indigo-100 text-indigo-600' },
+                    { de: 'Zehn', es: 'Diez (10)', numDisplay: '10', color: 'bg-indigo-100 text-indigo-600' },
+                    { de: 'Elf', es: 'Once (11)', numDisplay: '11', color: 'bg-purple-100 text-purple-600' },
+                    { de: 'Zwölf', es: 'Doce (12)', numDisplay: '12', color: 'bg-purple-100 text-purple-600' },
+                    { de: 'Dreizehn', es: 'Trece (13)', numDisplay: '13', color: 'bg-purple-100 text-purple-600' },
+                    { de: 'Vierzehn', es: 'Catorce (14)', numDisplay: '14', color: 'bg-purple-100 text-purple-600' },
+                    { de: 'Fünfzehn', es: 'Quince (15)', numDisplay: '15', color: 'bg-purple-100 text-purple-600' },
+                    { de: 'Sechzehn', es: 'Dieciséis (16)', numDisplay: '16', color: 'bg-purple-100 text-purple-600' },
+                    { de: 'Siebzehn', es: 'Diecisiete (17)', numDisplay: '17', color: 'bg-purple-100 text-purple-600' },
+                    { de: 'Achtzehn', es: 'Dieciocho (18)', numDisplay: '18', color: 'bg-purple-100 text-purple-600' },
+                    { de: 'Neunzehn', es: 'Diecinueve (19)', numDisplay: '19', color: 'bg-purple-100 text-purple-600' },
+                    { de: 'Zwanzig', es: 'Veinte (20)', numDisplay: '20', color: 'bg-purple-100 text-purple-600' }
+                ]
+            },
+            school: {
+                title: 'Útiles Escolares',
+                icon: 'fa-school',
+                items: [
+                    { de: 'das Buch', es: 'El libro', icon: 'fa-book', color: 'bg-amber-100 text-amber-600' },
+                    { de: 'der Bleistift', es: 'El lápiz', icon: 'fa-pencil', color: 'bg-amber-100 text-amber-600' },
+                    { de: 'die Tasche', es: 'La mochila / El bolso', icon: 'fa-bag-shopping', color: 'bg-amber-100 text-amber-600' },
+                    { de: 'das Lineal', es: 'La regla', icon: 'fa-ruler', color: 'bg-amber-100 text-amber-600' },
+                    { de: 'die Schere', es: 'La tijera', icon: 'fa-scissors', color: 'bg-amber-100 text-amber-600' },
+                    { de: 'der Radiergummi', es: 'El borrador / La goma', icon: 'fa-eraser', color: 'bg-amber-100 text-amber-600' },
+                    { de: 'das Heft', es: 'El cuaderno', icon: 'fa-book-open', color: 'bg-amber-100 text-amber-600' },
+                    { de: 'der Anspitzer', es: 'El sacapuntas', icon: 'fa-pen-clip', color: 'bg-amber-100 text-amber-600' },
+                    { de: 'der Buntstift', es: 'El lápiz de color', icon: 'fa-palette', color: 'bg-amber-100 text-amber-600' },
+                    { de: 'der Kugelschreiber', es: 'El bolígrafo / La pluma', icon: 'fa-pen font-bold', color: 'bg-amber-100 text-amber-600' },
+                    { de: 'der Filzstift', es: 'El marcador / El plumón', icon: 'fa-marker', color: 'bg-amber-100 text-amber-600' },
+                    { de: 'das Mäppchen', es: 'La cartuchera / El estuche', icon: 'fa-box-archive', color: 'bg-amber-100 text-amber-600' },
+                    { de: 'der Klebstoff', es: 'La goma de pegar / El pegamento', icon: 'fa-note-sticky', color: 'bg-amber-100 text-amber-600' },
+                    { de: 'der Ordner', es: 'La carpeta / Archivador', icon: 'fa-folder-open', color: 'bg-amber-100 text-amber-600' },
+                    { de: 'der Tuschkasten', es: 'La caja de acuarelas', icon: 'fa-paintbrush', color: 'bg-amber-100 text-amber-600' },
+                    { de: 'der Pinsel', es: 'El pincel', icon: 'fa-paint-brush', color: 'bg-amber-100 text-amber-600' },
+                    { de: 'das Papier', es: 'El papel', icon: 'fa-file-lines', color: 'bg-amber-100 text-amber-600' },
+                    { de: 'die Kreide', es: 'La tiza', icon: 'fa-chalkboard', color: 'bg-amber-100 text-amber-600' },
+                    { de: 'der Schwamm', es: 'La esponja de pizarra', icon: 'fa-box font-light', color: 'bg-amber-100 text-amber-600' },
+                    { de: 'der Taschenrechner', es: 'La calculadora de bolsillo', icon: 'fa-calculator', color: 'bg-amber-100 text-amber-600' }
+                ]
+            },
+            family: {
+                title: 'La Familia',
+                icon: 'fa-people-roof',
+                items: [
+                    { de: 'die Mutter', es: 'La mamá', icon: 'fa-person-breastfeeding', color: 'bg-rose-100 text-rose-500' },
+                    { de: 'der Vater', es: 'El papá', icon: 'fa-person', color: 'bg-blue-100 text-blue-500' },
+                    { de: 'die Schwester', es: 'La hermana', icon: 'fa-child-dress', color: 'bg-pink-100 text-pink-500' },
+                    { de: 'der Bruder', es: 'El hermano', icon: 'fa-child', color: 'bg-green-100 text-green-500' },
+                    { de: 'die Oma', es: 'La abuela', icon: 'fa-person-cane', color: 'bg-purple-100 text-purple-500' },
+                    { de: 'der Opa', es: 'El abuelo', icon: 'fa-person-cane', color: 'bg-gray-100 text-gray-600' },
+                    { de: 'die Familie', es: 'La familia', icon: 'fa-house-chimney-window', color: 'bg-yellow-100 text-yellow-600' }
+                ]
+            },
+            days: {
+                title: 'Días de la Semana',
+                icon: 'fa-calendar-days',
+                items: [
+                    { de: 'Montag', es: 'Lunes', icon: 'fa-calendar-day', color: 'bg-sky-100 text-sky-600' },
+                    { de: 'Dienstag', es: 'Martes', icon: 'fa-calendar-day', color: 'bg-sky-100 text-sky-600' },
+                    { de: 'Mittwoch', es: 'Miércoles', icon: 'fa-calendar-day', color: 'bg-sky-100 text-sky-600' },
+                    { de: 'Donnerstag', es: 'Jueves', icon: 'fa-calendar-day', color: 'bg-sky-100 text-sky-600' },
+                    { de: 'Freitag', es: 'Viernes', icon: 'fa-calendar-day', color: 'bg-sky-100 text-sky-600' },
+                    { de: 'Samstag', es: 'Sábado', icon: 'fa-calendar-check', color: 'bg-emerald-100 text-emerald-600' },
+                    { de: 'Sonntag', es: 'Domingo', icon: 'fa-sun', color: 'bg-amber-100 text-amber-500' }
+                ]
+            }
+        };
+
+        // Frases para el Constructor de Oraciones
+        const sentenceTemplates = [
+            { es: "Esta es mi mamá", words: ["Das", "ist", "meine", "Mutter"] },
+            { es: "Mi cabeza me duele", words: ["Mein", "Kopf", "tut", "weh"] },
+            { es: "Yo tengo dos ojos", words: ["Ich", "habe", "zwei", "Augen"] },
+            { es: "El corazón late", words: ["Das", "Herz", "schlägt"] },
+            { es: "Yo tengo un libro", words: ["Ich", "habe", "ein", "Buch"] },
+            { es: "El libro es rojo", words: ["Das", "Buch", "ist", "rot"] },
+            { es: "Este es mi padre", words: ["Das", "ist", "mein", "Vater"] }
+        ];
+
+        // Función auxiliar para aplanar todo el vocabulario (ideal para trivias)
+        function getAllVocabularyFlat() {
+            let list = [];
+            Object.values(vocabularyData).forEach(cat => {
+                if (cat.isGrouped) {
+                    cat.groups.forEach(group => {
+                        group.items.forEach(item => {
+                            const fullGerman = `${item.article ? item.article + ' ' : ''}${item.word}`;
+                            list.push({
+                                de: fullGerman,
+                                es: item.es,
+                                icon: item.icon,
+                                color: item.color
+                            });
+                        });
+                    });
+                } else if (cat.items) {
+                    cat.items.forEach(item => {
+                        list.push({
+                            de: item.de,
+                            es: item.es,
+                            icon: item.icon,
+                            color: item.color
+                        });
+                    });
+                }
+            });
+            return list;
+        }
+
+        /* ==================== VOCABULARIO & CARDS ==================== */
+        function createCardElement(article, word, plural, es, icon, colorClass, customDisplay) {
+            const card = document.createElement('div');
+            card.className = 'bg-white rounded-3xl p-4 shadow-md border-2 border-gray-100 card-bounce flex flex-col items-center text-center cursor-pointer relative overflow-hidden group';
+            
+            let articleClass = '';
+            if (article === 'der') articleClass = 'gender-der';
+            else if (article === 'die') articleClass = 'gender-die';
+            else if (article === 'das') articleClass = 'gender-das';
+
+            const fullGermanWord = article ? `${article} ${word}` : word;
+
+            // Visual badge icon or text (e.g. for numbers like "10", "15")
+            let visualContent = `<i class="fa-solid ${icon}"></i>`;
+            if (customDisplay) {
+                visualContent = `<span class="font-extrabold text-2xl font-fun">${customDisplay}</span>`;
+            }
+
+            card.innerHTML = `
+                <div class="w-16 h-16 rounded-2xl ${colorClass} flex items-center justify-center text-2xl mb-3 shadow-inner group-hover:scale-110 transition">
+                    ${visualContent}
+                </div>
+                <h3 class="text-lg font-bold text-gray-800 mb-0.5 group-hover:text-brandPurple transition">
+                    ${article ? `<span class="${articleClass}">${article}</span> ` : ''}${word}
+                </h3>
+                ${plural ? `<span class="text-xs text-gray-400 font-bold mb-1">${plural}</span>` : ''}
+                <p class="text-xs font-semibold text-gray-500">${es}</p>
+                <div class="mt-3 bg-purple-50 text-brandPurple px-2.5 py-1 rounded-full text-xs font-bold flex items-center gap-1 group-hover:bg-brandPurple group-hover:text-white transition">
+                    <i class="fa-solid fa-volume-high text-xs"></i> Escuchar
+                </div>
+            `;
+
+            card.onclick = () => {
+                speakText(fullGermanWord);
+                card.classList.add('ring-4', 'ring-brandPurple');
+                setTimeout(() => card.classList.remove('ring-4', 'ring-brandPurple'), 600);
+            };
+
+            return card;
+        }
+
+        /* ==================== HELPER: CALCULADORA & GENERADOR DE NÚMEROS EN ALEMÁN ==================== */
+        let calcExpr = '0';
+        let calcJustEvaluated = false;
+
+        const unitsDe = ['', 'eins', 'zwei', 'drei', 'vier', 'fünf', 'sechs', 'sieben', 'acht', 'neun'];
+        const teensDe = {
+            10: 'zehn', 11: 'elf', 12: 'zwölf', 13: 'dreizehn', 14: 'vierzehn',
+            15: 'fünfzehn', 16: 'sechzehn', 17: 'siebzehn', 18: 'achtzehn', 19: 'neunzehn'
+        };
+        const tensDe = ['', '', 'zwanzig', 'dreißig', 'vierzig', 'fünfzig', 'sechzig', 'siebzig', 'achtzig', 'neunzig'];
+
+        function numberToGermanUnder1000(n) {
+            if (n === 0) return '';
+            let res = '';
+            let hundreds = Math.floor(n / 100);
+            let remainder = n % 100;
+
+            if (hundreds > 0) {
+                if (hundreds === 1) res += 'einhundert';
+                else res += unitsDe[hundreds] + 'hundert';
+            }
+
+            if (remainder > 0) {
+                if (remainder < 10) {
+                    res += unitsDe[remainder];
+                } else if (remainder >= 10 && remainder < 20) {
+                    res += teensDe[remainder];
+                } else {
+                    let u = remainder % 10;
+                    let t = Math.floor(remainder / 10);
+                    if (u > 0) {
+                        let uWord = (u === 1) ? 'ein' : unitsDe[u];
+                        res += uWord + 'und' + tensDe[t];
+                    } else {
+                        res += tensDe[t];
+                    }
+                }
+            }
+            return res;
+        }
+
+        function numberToGerman(num) {
+            if (num === 0) return 'null';
+            if (num < 0) return 'minus ' + numberToGerman(Math.abs(num));
+            if (num > 999999) return 'Zahl zu groß (Número muy grande)';
+
+            let thousands = Math.floor(num / 1000);
+            let remainder = num % 1000;
+            let result = '';
+
+            if (thousands > 0) {
+                if (thousands === 1) {
+                    result += 'eintausend';
+                } else {
+                    result += numberToGermanUnder1000(thousands) + 'tausend';
+                }
+            }
+
+            if (remainder > 0) {
+                result += numberToGermanUnder1000(remainder);
+            }
+
+            return result;
+        }
+
+        function updateCalcDisplay(valNumber, expressionString) {
+            const numInput = document.getElementById('custom-number-input');
+            const exprDisp = document.getElementById('calc-expression-display');
+            const gerDisp = document.getElementById('custom-german-text');
+            const sumDisp = document.getElementById('calc-val-summary');
+            const spanText = document.getElementById('custom-spanish-text');
+
+            if (exprDisp) exprDisp.textContent = expressionString || valNumber.toString();
+            if (numInput) numInput.value = valNumber;
+            if (sumDisp) sumDisp.textContent = valNumber.toLocaleString('es-ES');
+
+            if (isNaN(valNumber)) {
+                if (gerDisp) gerDisp.textContent = 'Ingresa una cifra válida';
+                return;
+            }
+
+            const germanText = numberToGerman(valNumber);
+            if (gerDisp) gerDisp.textContent = germanText;
+        }
+
+        function onCalcInputChange(valStr) {
+            let val = parseInt(valStr);
+            if (isNaN(val)) val = 0;
+            if (val > 999999) val = 999999;
+            calcExpr = val.toString();
+            updateCalcDisplay(val, calcExpr);
+        }
+
+        function calcPressNum(digit) {
+            if (calcExpr === '0' || calcJustEvaluated) {
+                calcExpr = digit;
+                calcJustEvaluated = false;
+            } else {
+                if (calcExpr.length < 12) calcExpr += digit;
+            }
+            evaluateCalcPreview();
+        }
+
+        function calcPressOp(op) {
+            calcJustEvaluated = false;
+            const lastChar = calcExpr.slice(-1);
+            if (['+', '-', '*', '/'].includes(lastChar)) {
+                calcExpr = calcExpr.slice(0, -1) + op;
+            } else {
+                calcExpr += op;
+            }
+            evaluateCalcPreview();
+        }
+
+        function calcClear() {
+            calcExpr = '0';
+            calcJustEvaluated = false;
+            updateCalcDisplay(0, '0');
+        }
+
+        function calcEquals() {
+            try {
+                // Safety filter for math calculation
+                let sanitized = calcExpr.replace(/[^0-9+\-*/]/g, '');
+                let res = Math.floor(Function('"use strict";return (' + sanitized + ')')());
+                if (isNaN(res) || !isFinite(res)) res = 0;
+                if (res > 999999) res = 999999;
+                if (res < 0) res = Math.max(res, -999999);
+
+                updateCalcDisplay(res, calcExpr + ' = ' + res);
+                calcExpr = res.toString();
+                calcJustEvaluated = true;
+                
+                // Pronounce result upon calculating
+                convertAndSpeakCustomNumber();
+            } catch(e) {
+                calcClear();
+            }
+        }
+
+        function evaluateCalcPreview() {
+            try {
+                // Try previewing the calculation or current numeric chunk
+                let sanitized = calcExpr.replace(/[^0-9+\-*/]/g, '');
+                let currentNum = parseInt(sanitized);
+                if (isNaN(currentNum)) {
+                    // Extract trailing numbers
+                    let matches = sanitized.match(/\d+$/);
+                    currentNum = matches ? parseInt(matches[0]) : 0;
+                }
+                updateCalcDisplay(currentNum, calcExpr);
+            } catch(e) {
+                updateCalcDisplay(0, calcExpr);
+            }
+        }
+
+        function convertAndSpeakCustomNumber() {
+            const input = document.getElementById('custom-number-input');
+            let val = parseInt(input ? input.value : 0);
+            if (isNaN(val)) val = 0;
+
+            const germanName = numberToGerman(val);
+            speakText(germanName);
+        }
+
+        function loadTopic(topicKey) {
+            currentCategory = topicKey;
+
+            // Mostrar/ocultar explorador de números si el tema es 'numbers'
+            const numExplorer = document.getElementById('custom-number-explorer');
+            if (numExplorer) {
+                if (topicKey === 'numbers') {
+                    numExplorer.classList.remove('hidden');
+                } else {
+                    numExplorer.classList.add('hidden');
+                }
+            }
+
+            // Actualizar estado botones de temas
+            document.querySelectorAll('.topic-btn').forEach(btn => {
+                btn.classList.remove('border-brandPink', 'text-brandPink', 'bg-pink-50');
+                btn.classList.add('border-gray-200', 'text-gray-600');
+            });
+
+            const activeTopicBtn = document.getElementById(`topic-${topicKey}`);
+            if (activeTopicBtn) {
+                activeTopicBtn.classList.add('border-brandPink', 'text-brandPink', 'bg-pink-50');
+                activeTopicBtn.classList.remove('border-gray-200', 'text-gray-600');
+            }
+
+            const grid = document.getElementById('flashcards-grid');
+            if (!grid) return;
+            grid.innerHTML = '';
+
+            const topic = vocabularyData[topicKey];
+            if (!topic) return;
+
+            if (topic.isGrouped) {
+                // Renderizar agrupaciones con colores temáticos
+                topic.groups.forEach(group => {
+                    const groupWrapper = document.createElement('div');
+                    groupWrapper.className = `p-5 rounded-3xl ${group.bgColor} border-2 ${group.borderColor} mb-6`;
+
+                    const groupTitle = document.createElement('h3');
+                    groupTitle.className = `text-xl font-bold ${group.textColor} mb-4 flex items-center gap-2 font-fun`;
+                    groupTitle.innerHTML = `<i class="fa-solid fa-layer-group"></i> ${group.name}`;
+                    groupWrapper.appendChild(groupTitle);
+
+                    const cardsGrid = document.createElement('div');
+                    cardsGrid.className = 'grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4';
+
+                    group.items.forEach(item => {
+                        const card = createCardElement(item.article, item.word, item.plural, item.es, item.icon, item.color, item.numDisplay);
+                        cardsGrid.appendChild(card);
+                    });
+
+                    groupWrapper.appendChild(cardsGrid);
+                    grid.appendChild(groupWrapper);
+                });
+            } else {
+                // Renderizar grid estándar para otros temas
+                const cardsGrid = document.createElement('div');
+                cardsGrid.className = 'grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6';
+
+                topic.items.forEach(item => {
+                    // Detectar si de contiene articulo
+                    let art = '', word = item.de;
+                    if (item.de.startsWith('der ')) { art = 'der'; word = item.de.replace('der ', ''); }
+                    else if (item.de.startsWith('die ')) { art = 'die'; word = item.de.replace('die ', ''); }
+                    else if (item.de.startsWith('das ')) { art = 'das'; word = item.de.replace('das ', ''); }
+
+                    const card = createCardElement(art, word, '', item.es, item.icon, item.color, item.numDisplay);
+                    cardsGrid.appendChild(card);
+                });
+
+                grid.appendChild(cardsGrid);
+            }
+        }
+
+        /* ==================== MODULO: ESCUCHA Y SELECCIONA ==================== */
+        function initListeningChallenge() {
+            let allItems = getAllVocabularyFlat();
+
+            // Elegir un item aleatorio
+            const target = allItems[Math.floor(Math.random() * allItems.length)];
+            currentListeningTarget = target;
+
+            // Elegir 3 distracciones
+            let options = [target];
+            while (options.length < 4) {
+                const randomItem = allItems[Math.floor(Math.random() * allItems.length)];
+                if (!options.find(o => o.de === randomItem.de)) {
+                    options.push(randomItem);
+                }
+            }
+
+            options.sort(() => Math.random() - 0.5);
+
+            const optionsContainer = document.getElementById('listening-options');
+            if (!optionsContainer) return;
+            optionsContainer.innerHTML = '';
+            document.getElementById('listening-feedback').innerHTML = '';
+            document.getElementById('listening-feedback').className = 'mt-6 h-12 flex items-center justify-center text-lg font-bold rounded-xl transition';
+
+            options.forEach(opt => {
+                const btn = document.createElement('button');
+                btn.className = 'p-4 bg-gray-50 hover:bg-blue-50 border-2 border-gray-200 rounded-2xl font-bold text-gray-700 flex flex-col items-center gap-2 transition card-bounce';
+                btn.innerHTML = `
+                    <div class="w-12 h-12 rounded-xl ${opt.color} flex items-center justify-center text-xl">
+                        <i class="fa-solid ${opt.icon}"></i>
+                    </div>
+                    <span>${opt.de}</span>
+                    <span class="text-xs text-gray-400 font-normal">(${opt.es})</span>
+                `;
+                btn.onclick = () => checkListeningAnswer(opt, btn);
+                optionsContainer.appendChild(btn);
+            });
+
+            setTimeout(() => playListeningAudio(), 300);
+        }
+
+        function playListeningAudio() {
+            if (currentListeningTarget) {
+                speakText(currentListeningTarget.de);
+            }
+        }
+
+        function checkListeningAnswer(selectedOpt, btnElement) {
+            const feedback = document.getElementById('listening-feedback');
+            if (!feedback) return;
+
+            if (selectedOpt.de === currentListeningTarget.de) {
+                feedback.textContent = '¡Excelente! 🎉 Gut gemacht!';
+                feedback.className = 'mt-6 h-12 flex items-center justify-center text-lg font-bold rounded-xl bg-green-100 text-green-700 border-2 border-green-300';
+                speakText('Richtig! Sehr gut!');
+                addStars(1);
+            } else {
+                feedback.textContent = '¡Inténtalo otra vez! 😅';
+                feedback.className = 'mt-6 h-12 flex items-center justify-center text-lg font-bold rounded-xl bg-red-100 text-red-600 border-2 border-red-300';
+                speakText('Versuche es noch einmal');
+            }
+        }
+
+        function nextListeningQuestion() {
+            initListeningChallenge();
+        }
+
+        /* ==================== MODULO: CONSTRUCTOR DE ORACIONES ==================== */
+        function initBuilder() {
+            const template = sentenceTemplates[Math.floor(Math.random() * sentenceTemplates.length)];
+            currentBuilderSentence = template;
+            selectedBuilderWords = [];
+
+            document.getElementById('builder-target-es').textContent = `"${template.es}"`;
+
+            // Shuffle target words for available word pool
+            const shuffledWords = [...template.words].sort(() => Math.random() - 0.5);
+
+            const pool = document.getElementById('builder-words-pool');
+            pool.innerHTML = '';
+            shuffledWords.forEach(word => {
+                const btn = document.createElement('button');
+                btn.className = 'px-4 py-2 bg-white border-2 border-brandGreen text-brandGreen font-bold rounded-xl shadow-sm hover:bg-green-50 transition card-bounce text-base';
+                btn.textContent = word;
+                btn.onclick = () => selectBuilderWord(word, btn);
+                pool.appendChild(btn);
+            });
+
+            updateDropzone();
+            document.getElementById('builder-feedback').textContent = '';
+        }
+
+        function selectBuilderWord(word, btnElement) {
+            selectedBuilderWords.push(word);
+            btnElement.disabled = true;
+            btnElement.classList.add('opacity-40', 'cursor-not-allowed');
+            speakText(word);
+            updateDropzone();
+        }
+
+        function updateDropzone() {
+            const dropzone = document.getElementById('builder-dropzone');
+            dropzone.innerHTML = '';
+
+            if (selectedBuilderWords.length === 0) {
+                dropzone.innerHTML = '<span id="builder-placeholder" class="text-gray-400 text-sm font-semibold">Toca las palabras para agregarlas aquí...</span>';
+                return;
+            }
+
+            selectedBuilderWords.forEach((word, index) => {
+                const wordTag = document.createElement('span');
+                wordTag.className = 'px-4 py-2 bg-brandGreen text-white font-bold rounded-xl shadow cursor-pointer flex items-center gap-1 hover:bg-red-500 transition';
+                wordTag.innerHTML = `${word} <i class="fa-solid fa-xmark text-xs ml-1"></i>`;
+                wordTag.onclick = () => removeBuilderWord(index);
+                dropzone.appendChild(wordTag);
+            });
+        }
+
+        function removeBuilderWord(index) {
+            const removed = selectedBuilderWords.splice(index, 1)[0];
+            updateDropzone();
+
+            // Re-enable in pool
+            const poolBtns = document.querySelectorAll('#builder-words-pool button');
+            poolBtns.forEach(btn => {
+                if (btn.textContent === removed && btn.disabled) {
+                    btn.disabled = false;
+                    btn.classList.remove('opacity-40', 'cursor-not-allowed');
+                }
+            });
+        }
+
+        function speakBuiltSentence() {
+            if (selectedBuilderWords.length > 0) {
+                speakText(selectedBuilderWords.join(' '));
+            } else if (currentBuilderSentence) {
+                speakText(currentBuilderSentence.words.join(' '));
+            }
+        }
+
+        function checkBuiltSentence() {
+            const feedback = document.getElementById('builder-feedback');
+            const constructed = selectedBuilderWords.join(' ');
+            const target = currentBuilderSentence.words.join(' ');
+
+            if (constructed === target) {
+                feedback.textContent = '¡Fantástico! Frase correcta 🌟';
+                feedback.className = 'mt-4 text-center font-bold text-lg text-green-600';
+                speakText(constructed + '. Perfekt!');
+                addStars(3);
+                setTimeout(() => initBuilder(), 2000);
+            } else {
+                feedback.textContent = 'Casi lo tienes... Revisa el orden de las palabras';
+                feedback.className = 'mt-4 text-center font-bold text-lg text-red-500';
+                speakText('Das ist nicht ganz richtig');
+            }
+        }
+
+        function resetBuilder() {
+            initBuilder();
+        }
+
+        /* ==================== MODULO: TRIVIA / QUIZ ==================== */
+        function initQuiz() {
+            quizScore = 0;
+            currentQuizIndex = 0;
+            document.getElementById('quiz-score').textContent = quizScore;
+
+            let allItems = getAllVocabularyFlat();
+
+            const shuffled = [...allItems].sort(() => Math.random() - 0.5);
+            quizQuestions = shuffled.slice(0, 5).map(item => {
+                let distractors = allItems.filter(i => i.de !== item.de).sort(() => Math.random() - 0.5).slice(0, 3);
+                let options = [item, ...distractors].sort(() => Math.random() - 0.5);
+                return {
+                    correct: item,
+                    options: options
+                };
+            });
+
+            renderQuizQuestion();
+        }
+
+        function renderQuizQuestion() {
+            if (currentQuizIndex >= quizQuestions.length) {
+                // Fin de la trivia
+                showQuizResults();
+                return;
+            }
+
+            const q = quizQuestions[currentQuizIndex];
+            document.getElementById('quiz-progress-text').textContent = `Pregunta ${currentQuizIndex + 1} de ${quizQuestions.length}`;
+            document.getElementById('quiz-question-title').textContent = `¿Cuál es la traducción de "${q.correct.es}"?`;
+            
+            const media = document.getElementById('quiz-media');
+            media.innerHTML = `<i class="fa-solid ${q.correct.icon}"></i>`;
+
+            const optionsContainer = document.getElementById('quiz-options-container');
+            optionsContainer.innerHTML = '';
+            document.getElementById('quiz-feedback').textContent = '';
+            document.getElementById('quiz-next-btn').classList.add('hidden');
+
+            q.options.forEach(opt => {
+                const btn = document.createElement('button');
+                btn.className = 'p-4 bg-white border-2 border-gray-200 hover:border-brandOrange text-gray-800 font-bold rounded-2xl text-lg transition card-bounce shadow-sm flex items-center justify-center gap-2';
+                btn.textContent = opt.de;
+                btn.onclick = () => checkQuizAnswer(opt, q.correct, btn);
+                optionsContainer.appendChild(btn);
+            });
+        }
+
+        function checkQuizAnswer(selected, correct, btnElement) {
+            const feedback = document.getElementById('quiz-feedback');
+            const allOptionBtns = document.querySelectorAll('#quiz-options-container button');
+            
+            // Bloquear clicks adicionales
+            allOptionBtns.forEach(b => b.disabled = true);
+
+            if (selected.de === correct.de) {
+                btnElement.classList.add('bg-green-500', 'text-white', 'border-green-600');
+                feedback.textContent = '¡Respuesta Correcta! 🎉';
+                feedback.className = 'h-10 text-center font-bold text-lg text-green-600';
+                quizScore += 10;
+                document.getElementById('quiz-score').textContent = quizScore;
+                speakText(correct.de + '. Richtig!');
+                addStars(2);
+            } else {
+                btnElement.classList.add('bg-red-500', 'text-white', 'border-red-600');
+                feedback.textContent = `Incorrecto. Era: "${correct.de}"`;
+                feedback.className = 'h-10 text-center font-bold text-lg text-red-500';
+                speakText('Falsch');
+                
+                // Resaltar la correcta
+                allOptionBtns.forEach(b => {
+                    if (b.textContent === correct.de) {
+                        b.classList.add('bg-green-200', 'border-green-500');
+                    }
+                });
+            }
+
+            document.getElementById('quiz-next-btn').classList.remove('hidden');
+        }
+
+        function nextQuizQuestion() {
+            currentQuizIndex++;
+            renderQuizQuestion();
+        }
+
+        function showQuizResults() {
+            const container = document.getElementById('section-quiz');
+            container.innerHTML = `
+                <div class="max-w-md mx-auto bg-white rounded-3xl p-8 shadow-xl border-4 border-brandYellow text-center">
+                    <div class="text-6xl text-yellow-500 mb-4">🏆</div>
+                    <h2 class="text-3xl font-bold text-gray-800 mb-2">¡Trivia Completada!</h2>
+                    <p class="text-gray-600 mb-6">Lograste un puntaje total de:</p>
+                    <div class="text-4xl font-extrabold text-brandPurple mb-6">${quizScore} Puntos</div>
+                    <button onclick="location.reload()" class="px-6 py-3 bg-brandPurple text-white font-bold rounded-xl shadow hover:bg-purple-700 transition">
+                        <i class="fa-solid fa-rotate-right mr-1"></i> Jugar de Nuevo
+                    </button>
+                </div>
+            `;
+            try {
+                confetti({
+                    particleCount: 100,
+                    spread: 70,
+                    origin: { y: 0.6 }
+                });
+            } catch(e) {}
+        }
+
+        /* ==================== INITIALIZATION ==================== */
+        window.onload = function() {
+            // Cargar tema por defecto (body)
+            loadTopic('body');
+        };
+    </script>
+</body>
+</html>
